@@ -9,6 +9,8 @@ export interface componentTemplateData{
     mark: string;
     detail: any;
     style: any;
+    components?:Function;
+    click?:any;
 }
 
 export interface pageData{
