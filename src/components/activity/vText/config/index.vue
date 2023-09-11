@@ -8,10 +8,10 @@
         />
       </a-form-item>
       <a-form-item label="字体颜色：">
-        <ColorPicker v-model:value="form.color" />
+        <ColorPicker v-model="form.color" />
       </a-form-item>
       <a-form-item label="字体大小：">
-        <BaseInput v-model:value="form.fontSize" />
+        <BaseInput v-model="form.fontSize" />
       </a-form-item>
     </a-form>
     <BaseSetting></BaseSetting>

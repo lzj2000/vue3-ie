@@ -12,7 +12,7 @@
   </a-collapse>
 </template>
 <script lang="ts" setup>
-import { RootObject } from './tyoe';
+import { RootObject } from './type';
 
 
 const activeName = ['基础组件'];

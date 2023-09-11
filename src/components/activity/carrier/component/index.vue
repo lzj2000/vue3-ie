@@ -1,11 +1,16 @@
 <template>
   <div class="carrier" :style="carrierStyle" @drop.stop="componentDrap" @dragover.prevent>
     <div v-for="component in components" :key="component.mark" :class="{ checked: component.mark === currentMark }"
-      :style="componentWrapperStyle(component.style)" @click.stop="switchComponent(component)">
-      <component :is="component.name" :class="component.mark" v-bind="{
+    :style="{
+        ...componentWrapperStyle(component.style),
+        'text-align': component.style.align
+      }" @click.stop="switchComponent(component)">
+      <div style="display: inline-block;">
+        <component :is="component.name" :class="component.mark" v-bind="{
         ...component.detail,
         ...generateStyle(component.style),
       }" :clickChock="(component) => clickChock(component.click)"></component>
+      </div>
     </div>
   </div>
 </template>
@@ -35,13 +40,29 @@ const carrierStyle = computed(() => {
 
 // 组件包装style
 const componentWrapperStyle = (componentStyle) => {
+  console.log(componentStyle);
   const componentFreeStyle = {
     position: 'absolute',
-    left: componentStyle.left,
-    top: componentStyle.top,
+    left: '0px'
   };
-  return props.type === 'free' ? componentFreeStyle : {};
+  if(componentStyle.align == 'center'){
+    componentFreeStyle.left = calculateDifference(props.width,componentStyle.width,2)
+  }else if(componentStyle.align == 'right'){
+    componentFreeStyle.left = calculateDifference(props.width,componentStyle.width,1)
+  }
+  return props.type === 'free' ? componentFreeStyle : { };
 };
+const calculateDifference = (value1, value2,num) =>{
+  // 将值1和值2都转换为像素值（如果它们是字符串的话）
+  const pixelValue1 = typeof value1 === 'string' ? parseInt(value1, 10) : value1;
+  const pixelValue2 = typeof value2 === 'string' ? parseInt(value2, 10) : value2;
+
+  // 计算差值并将其转换为带有 'px' 单位的字符串
+  const difference = (pixelValue1 - pixelValue2)/num;
+  const result = difference + 'px';
+
+  return result;
+}
 
 const emit = defineEmits(['update:components']);
 // 元素拖入carrier组件
@@ -52,7 +73,6 @@ const componentDrap = (e) => {
     name: component.name,
     fullName: component.fullName,
   });
-  console.log(emit);
   // 组件数据添加到容器components
   emit('update:components', [...props.components, componentData]);
 };
